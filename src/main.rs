@@ -9,6 +9,7 @@ use structopt::StructOpt;
 
 /// Command line arguments
 #[derive(StructOpt, Debug)]
+#[structopt(about = "calculates timestamps to pace yourself in a chess game")]
 struct Opt {
     /// Timecontrol start time in minutes
     minutes: u64,

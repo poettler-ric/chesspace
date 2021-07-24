@@ -85,8 +85,10 @@ fn main() {
         );
     } else {
         println!(
-            "total time: {}:{:0>2}min, time per round: {:?}",
-            total_minutes, total_seconds, remaining_time_per_round
+            "total time: {}:{:0>2}min, time per round: {:.1}s",
+            total_minutes,
+            total_seconds,
+            remaining_time_per_round.as_secs_f32()
         );
     }
 

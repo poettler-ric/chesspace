@@ -38,6 +38,9 @@ struct Opt {
     opening: Option<u32>,
 }
 
+/// Extracts the minutes out of a Duration.
+///
+/// Returns the extracted minutes and remaining seconds as fraction.
 fn break_duration_to_min(d: Duration) -> (i32, f64) {
     let minutes = (d.as_secs_f64() / 60.0) as i32;
     let seconds = d.as_secs_f64() - minutes as f64 * 60.0;

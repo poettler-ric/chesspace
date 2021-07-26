@@ -64,6 +64,12 @@ fn main() {
     let opening_time_per_round: Duration;
     let remaining_time_per_round: Duration;
 
+    print!("timecontrol: {}+{}", opt.minutes, opt.increment);
+    if opt.lichess {
+        print!(" (lichess)");
+    }
+    println!("");
+
     if let (Some(opening), Some(percentage)) = (opt.opening, opt.percentage) {
         opening_rounds = opening;
         let first_duration = total_time * percentage / 100;

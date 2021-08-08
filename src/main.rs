@@ -75,6 +75,12 @@ fn main() {
         let first_duration = total_time * percentage / 100;
         opening_time_per_round = first_duration / opening;
         remaining_time_per_round = (total_time - first_duration) / (opt.rounds - opening);
+    } else if let (Some(opening), None) = (opt.opening, opt.percentage) {
+        opening_rounds = opening;
+        // opening rounds are played twice as fast
+        // total_time = opening_time_per_round * opening_rounds + (opt.rounds - opening_rounds) * 2 * opening_time_per_round
+        opening_time_per_round = total_time / (2 * opt.rounds - opening_rounds);
+        remaining_time_per_round = 2 * opening_time_per_round;
     } else {
         opening_rounds = 0;
         opening_time_per_round = Duration::new(0, 0);

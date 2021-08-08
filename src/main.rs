@@ -33,7 +33,7 @@ struct Opt {
     #[structopt(short, long)]
     percentage: Option<u32>,
 
-    /// Use <percentage> of time for the first <opening> rounds
+    /// Use <percentage> of time for the first <opening> rounds (if skipped openings are played twice as fast)
     #[structopt(short, long)]
     opening: Option<u32>,
 }

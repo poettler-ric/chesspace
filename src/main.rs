@@ -68,7 +68,7 @@ fn main() {
     if opt.lichess {
         print!(" (lichess)");
     }
-    println!("");
+    println!();
 
     match (opt.opening, opt.percentage) {
         (Some(opening), Some(percentage)) => {

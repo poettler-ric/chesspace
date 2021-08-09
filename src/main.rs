@@ -86,7 +86,7 @@ fn main() {
         }
         _ => {
             opening_rounds = 0;
-            opening_time_per_round = Duration::new(0, 0);
+            opening_time_per_round = Duration::ZERO;
             remaining_time_per_round = total_time / opt.rounds;
         }
     }

@@ -93,11 +93,14 @@ fn main() {
 
     let (total_minutes, total_seconds) = break_duration_to_min(total_time);
     if opening_rounds > 0 {
+        println!("total time: {}:{:0>2}min", total_minutes, total_seconds);
         println!(
-            "total time: {}:{:0>2}min, time per opening round ({}): {:.1}s, remaining time per round: {:.1}s",
-            total_minutes, total_seconds,
-            opening_rounds,
+            "time per opening round: {:.1}s ({} rounds)",
             opening_time_per_round.as_secs_f32(),
+            opening_rounds
+        );
+        println!(
+            "time per remaining round: {:.1}s",
             remaining_time_per_round.as_secs_f32()
         );
     } else {

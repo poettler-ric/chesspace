@@ -4,11 +4,11 @@
 
 //! `chesspace` calculates timestamps to pace yourself in chess games.
 
+use clap::Parser;
 use std::time::Duration;
-use structopt::StructOpt;
 
 /// Command line arguments
-#[derive(StructOpt, Debug)]
+#[derive(Parser, Debug)]
 #[structopt(about = "calculates timestamps to pace yourself in a chess game")]
 struct Opt {
     /// Timecontrol start time in minutes
@@ -18,23 +18,23 @@ struct Opt {
     increment: u64,
 
     /// Rounds to be played
-    #[structopt(short, long, default_value = "40")]
+    #[arg(short, long, default_value_t = 40)]
     rounds: u32,
 
     /// lichess (doesn't apply increment at first round)
-    #[structopt(short, long)]
+    #[arg(short, long)]
     lichess: bool,
 
     /// Display every <display> round
-    #[structopt(short, long, default_value = "1")]
+    #[arg(short, long, default_value_t = 1)]
     display: u32,
 
     /// Use <percentage> of time for the first <opening> rounds
-    #[structopt(short, long)]
+    #[arg(short, long)]
     percentage: Option<u32>,
 
     /// Use <percentage> of time for the first <opening> rounds (if skipped openings are played twice as fast)
-    #[structopt(short, long)]
+    #[arg(short, long)]
     opening: Option<u32>,
 }
 
@@ -48,7 +48,7 @@ fn break_duration_to_min(d: Duration) -> (i32, f64) {
 }
 
 fn main() {
-    let opt = Opt::from_args();
+    let opt = Opt::parse();
 
     let start_time = Duration::new(opt.minutes * 60, 0);
     let increment = Duration::new(opt.increment, 0);

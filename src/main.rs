@@ -17,23 +17,23 @@ struct Opt {
     /// Increment in seconds
     increment: u64,
 
-    /// Rounds to be played
+    /// Moves to be played
     #[arg(short, long, default_value_t = 40)]
-    rounds: u32,
+    moves: u32,
 
-    /// lichess (doesn't apply increment at first round)
+    /// lichess (doesn't apply increment at first move)
     #[arg(short, long)]
     lichess: bool,
 
-    /// Display every <display> round
+    /// Display every <display> move
     #[arg(short, long, default_value_t = 1)]
     display: u32,
 
-    /// Use <percentage> of time for the first <opening> rounds
+    /// Use <percentage> of time for the first <opening> moves
     #[arg(short, long)]
     percentage: Option<u32>,
 
-    /// Use <percentage> of time for the first <opening> rounds (if skipped openings are played twice as fast)
+    /// Use <percentage> of time for the first <opening> moves (if skipped openings are played twice as fast)
     #[arg(short, long)]
     opening: Option<u32>,
 }
@@ -55,14 +55,14 @@ fn main() {
     let total_time = start_time
         + increment
             * if opt.lichess {
-                opt.rounds - 1
+                opt.moves - 1
             } else {
-                opt.rounds
+                opt.moves
             };
 
-    let opening_rounds: u32;
-    let opening_time_per_round: Duration;
-    let remaining_time_per_round: Duration;
+    let opening_moves: u32;
+    let opening_time_per_move: Duration;
+    let remaining_time_per_move: Duration;
 
     print!("timecontrol: {}+{}", opt.minutes, opt.increment);
     if opt.lichess {
@@ -72,55 +72,55 @@ fn main() {
 
     match (opt.opening, opt.percentage) {
         (Some(opening), Some(percentage)) => {
-            opening_rounds = opening;
+            opening_moves = opening;
             let first_duration = total_time * percentage / 100;
-            opening_time_per_round = first_duration / opening;
-            remaining_time_per_round = (total_time - first_duration) / (opt.rounds - opening);
+            opening_time_per_move = first_duration / opening;
+            remaining_time_per_move = (total_time - first_duration) / (opt.moves - opening);
         }
         (Some(opening), None) => {
-            opening_rounds = opening;
-            // opening rounds are played twice as fast
-            // total_time = opening_time_per_round * opening_rounds + (opt.rounds - opening_rounds) * 2 * opening_time_per_round
-            opening_time_per_round = total_time / (2 * opt.rounds - opening_rounds);
-            remaining_time_per_round = 2 * opening_time_per_round;
+            opening_moves = opening;
+            // opening moves are played twice as fast
+            // total_time = opening_time_per_move * opening_moves + (opt.moves - opening_moves) * 2 * opening_time_per_move
+            opening_time_per_move = total_time / (2 * opt.moves - opening_moves);
+            remaining_time_per_move = 2 * opening_time_per_move;
         }
         _ => {
-            opening_rounds = 0;
-            opening_time_per_round = Duration::ZERO;
-            remaining_time_per_round = total_time / opt.rounds;
+            opening_moves = 0;
+            opening_time_per_move = Duration::ZERO;
+            remaining_time_per_move = total_time / opt.moves;
         }
     }
 
     let (total_minutes, total_seconds) = break_duration_to_min(total_time);
-    if opening_rounds > 0 {
+    if opening_moves > 0 {
         println!("total time: {}:{:0>2}min", total_minutes, total_seconds);
         println!(
-            "time per opening round: {:.1}s ({} rounds)",
-            opening_time_per_round.as_secs_f32(),
-            opening_rounds
+            "time per opening move: {:.1}s ({} moves)",
+            opening_time_per_move.as_secs_f32(),
+            opening_moves
         );
         println!(
-            "time per remaining round: {:.1}s",
-            remaining_time_per_round.as_secs_f32()
+            "time per remaining move: {:.1}s",
+            remaining_time_per_move.as_secs_f32()
         );
     } else {
         println!("total time: {}:{:0>2}min", total_minutes, total_seconds);
         println!(
-            "time per round: {:.1}s",
-            remaining_time_per_round.as_secs_f32()
+            "time per move: {:.1}s",
+            remaining_time_per_move.as_secs_f32()
         );
     }
 
     let mut time_remaining = start_time;
-    for i in 1..=opt.rounds {
+    for i in 1..=opt.moves {
         if !opt.lichess || i != 1 {
             time_remaining += increment;
         }
 
-        time_remaining -= if i <= opening_rounds {
-            opening_time_per_round
+        time_remaining -= if i <= opening_moves {
+            opening_time_per_move
         } else {
-            remaining_time_per_round
+            remaining_time_per_move
         };
 
         if i % opt.display == 0 {

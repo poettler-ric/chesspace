@@ -29,11 +29,11 @@ struct Opt {
     #[arg(short, long, default_value_t = 1)]
     display: u32,
 
-    /// Use <percentage> of time for the first <opening> moves
+    /// Use <percentage> of total time for the opening (if skipped opening moves are played twice as fast as normal ones)
     #[arg(short, long)]
     percentage: Option<u32>,
 
-    /// Use <percentage> of time for the first <opening> moves (if skipped openings are played twice as fast)
+    /// Number of moves considered to be opening moves
     #[arg(short, long)]
     opening: Option<u32>,
 }

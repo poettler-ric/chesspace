@@ -7,9 +7,8 @@
 use clap::Parser;
 use std::time::Duration;
 
-/// Command line arguments
+/// calculates timestamps to pace yourself in a chess game
 #[derive(Parser, Debug)]
-#[structopt(about = "calculates timestamps to pace yourself in a chess game")]
 struct Opt {
     /// Timecontrol start time in minutes
     minutes: u64,

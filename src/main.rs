@@ -9,7 +9,7 @@ use std::time::Duration;
 
 /// calculates timestamps to pace yourself in a chess game
 #[derive(Parser, Debug)]
-struct Opt {
+struct Cli {
     /// Timecontrol start time in minutes
     minutes: u64,
 
@@ -47,46 +47,46 @@ fn break_duration_to_min(d: Duration) -> (i32, f64) {
 }
 
 fn main() {
-    let opt = Opt::parse();
+    let cli = Cli::parse();
 
-    let start_time = Duration::new(opt.minutes * 60, 0);
-    let increment = Duration::new(opt.increment, 0);
+    let start_time = Duration::new(cli.minutes * 60, 0);
+    let increment = Duration::new(cli.increment, 0);
     let total_time = start_time
         + increment
-            * if opt.lichess {
-                opt.moves - 1
+            * if cli.lichess {
+                cli.moves - 1
             } else {
-                opt.moves
+                cli.moves
             };
 
     let opening_moves: u32;
     let opening_time_per_move: Duration;
     let remaining_time_per_move: Duration;
 
-    print!("timecontrol: {}+{}", opt.minutes, opt.increment);
-    if opt.lichess {
+    print!("timecontrol: {}+{}", cli.minutes, cli.increment);
+    if cli.lichess {
         print!(" (lichess)");
     }
     println!();
 
-    match (opt.opening, opt.percentage) {
+    match (cli.opening, cli.percentage) {
         (Some(opening), Some(percentage)) => {
             opening_moves = opening;
             let first_duration = total_time * percentage / 100;
             opening_time_per_move = first_duration / opening;
-            remaining_time_per_move = (total_time - first_duration) / (opt.moves - opening);
+            remaining_time_per_move = (total_time - first_duration) / (cli.moves - opening);
         }
         (Some(opening), None) => {
             opening_moves = opening;
             // opening moves are played twice as fast
             // total_time = opening_time_per_move * opening_moves + (opt.moves - opening_moves) * 2 * opening_time_per_move
-            opening_time_per_move = total_time / (2 * opt.moves - opening_moves);
+            opening_time_per_move = total_time / (2 * cli.moves - opening_moves);
             remaining_time_per_move = 2 * opening_time_per_move;
         }
         _ => {
             opening_moves = 0;
             opening_time_per_move = Duration::ZERO;
-            remaining_time_per_move = total_time / opt.moves;
+            remaining_time_per_move = total_time / cli.moves;
         }
     }
 
@@ -111,8 +111,8 @@ fn main() {
     }
 
     let mut time_remaining = start_time;
-    for i in 1..=opt.moves {
-        if !opt.lichess || i != 1 {
+    for i in 1..=cli.moves {
+        if !cli.lichess || i != 1 {
             time_remaining += increment;
         }
 
@@ -122,7 +122,7 @@ fn main() {
             remaining_time_per_move
         };
 
-        if i % opt.display == 0 {
+        if i % cli.display == 0 {
             let (minutes, seconds) = break_duration_to_min(time_remaining);
             println!("{:>2}: {:>2}:{:0>2.0}", i, minutes, seconds);
         }
